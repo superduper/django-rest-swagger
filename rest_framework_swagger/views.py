@@ -44,17 +44,17 @@ class SwaggerResourcesView(APIDocView):
 
     def get(self, request):
         apis = []
-        resources = self.get_resources()
-
+        resources = self.get_resources()  
+        normalize = lambda s: s if s.startswith('/') else "/%s" % s
         for path in resources:
             apis.append({
-                'path': "/%s" % path,
+                'path': normalize(path),
             })
 
         return Response({
             'apiVersion': SWAGGER_SETTINGS.get('api_version', ''),
             'swaggerVersion': '1.2.4',
-            'basePath': self.host,
+            'basePath': self.host[:-1],
             'apis': apis
         })
 
